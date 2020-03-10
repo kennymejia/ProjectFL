@@ -1,41 +1,46 @@
 import java.io.*;
 import java.util.Scanner;
-import java.util.regex.*;
 
 public class grepy {
 
     public static void main (String [] args) throws IOException {
 
         String alphabet = "";
+        CreateNFA.NFA nfa_of_input = new CreateNFA.NFA();
+        Scanner input = new Scanner(System.in);
 
-        try{
+        try {
             File alphabetFile = new File ("alphabet.txt");
             Scanner reader = new Scanner (alphabetFile);
             alphabet = reader.nextLine();
-
-            echoString(alphabet.toString());
-
+            System.out.println("The Alphabet: " + alphabet.toString());
             reader.close();
-        } catch (FileNotFoundException e){
 
+        } catch (FileNotFoundException e) {
 
+            System.out.println("No File Found");
         }
-        
-        System.out.println(args[0]);
 
-        // has to be deckared when compiling
-        Pattern p = Pattern.compile(args[0]);
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        String s = in.readLine();
-        // while our input from the keyboard is not empty we continue to loop
-        // javac grepy.java && java grepy '^(a|b)*$'
-        while (!s.isEmpty()) {
 
-            Matcher m = p.matcher(s);
-            if (m.matches()) System.out.println(s + " Matches Our Pattern");
-            s = in.readLine();
-        }
+        do {
 
-        
+            System.out.println("Enter A Regular Expression\n" +
+                                "Alphabet = {a, b}\n" +  
+                                "E = Epsilon Or Empty\n" +
+                                "* = Kleene Star\n" +
+                                "| = Union\n" +
+                                "q = quit\n" +
+                                "Note: Elements With Nothing Between Them Creates Automatic Concatenation");
+            String s = in.readLine();
+            if (s.equals("q")) 
+                break;
+            nfa_of_input = CreateNFA.generate(s);
+            System.out.println("\nNFA:");
+            nfa_of_input.build();
+
+        } while(input.hasNextLine());
+
+        input.close();
     }
 }
