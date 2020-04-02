@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -44,18 +45,19 @@ public class CreateNFA {
         }
 
         // Setting State Size
-        public void setSize(int size){
+        public void setSize(int size) {
             for (int i = 0; i < size; i++)
                 this.states.add(i);
         }
 
         // For Every Transition We Print The Start State and The Final State 
         // Along With Th Symbol
-        public void build(){
-            for (Transition t: transitions){
-                System.out.println("("+ t.state_from +", "+ t.transition_symbol +
-                    ", "+ t.state_to +")");
-            }    
+        public void build() {
+            for (Transition trans: transitions) {
+                System.out.println("("+ trans.state_from +" --- "+ trans.transition_symbol +
+                    " ---> "+ trans.state_to +")");
+            }
+            //(a|b(ab*a)*b)*
         }
     }
 
@@ -375,3 +377,4 @@ public class CreateNFA {
         return operands.pop();
     }
 }
+
