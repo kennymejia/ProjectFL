@@ -56,6 +56,7 @@ public class CreateDFA {
         }
     }
 
+    // failed attempt at SC
     public static DFA subsetConstruction2 (CreateNFA.NFA n) {
 
         CreateNFA.NFA myNFA = n;
@@ -144,43 +145,117 @@ public class CreateDFA {
         return myDFA;
     }
 
+    // subsetConstruction using a matrix
     public static DFA subsetConstruction (CreateNFA.NFA n) {
 
         CreateNFA.NFA myNFA = n;
         CreateDFA.DFA myDFA = new CreateDFA.DFA();
-        // holds 300 elements should be enough
-        int [][] subsetConstructionTable = new int [100][3];
+        
+        // holds 400 elements should be enough
+        int [][] scTable = new int [100][5];
+        
         // holds our nodes from the NFA
-        ArrayList <Integer> nodes = new ArrayList<Integer>();
-        // location to traverse subsetConstructionArray
-        int location = 1;
+        // ArrayList because we dont know how many nodes we will have
+        ArrayList <Integer> nodesAL = new ArrayList<Integer>();
 
         // looping over the NFA nodes
         for (int q = 0; q < myNFA.transitions.size(); q++) {
 
             // is the from node already in the array
-            if (!nodes.contains(myNFA.transitions.get(q).state_from)) {
+            if (!nodesAL.contains(myNFA.transitions.get(q).state_from)) {
 
-                nodes.add(myNFA.transitions.get(q).state_from);
+                nodesAL.add(myNFA.transitions.get(q).state_from);
             }
 
             // is the to node already in the array
-            if ((!nodes.contains(myNFA.transitions.get(q).state_to))) {
+            if ((!nodesAL.contains(myNFA.transitions.get(q).state_to))) {
 
-                nodes.add(myNFA.transitions.get(q).state_to);
+                nodesAL.add(myNFA.transitions.get(q).state_to);
             }
         }
 
-        // do something with combinations
+        //converting our ArrayList to an Array
+        int [] nodesArray = new int [nodesAL.size()];
 
+        for (int q = 0; q < nodesAL.size(); q++) {
 
-        // adding all of our nodes form 
-        for (int q = 0; q < nodes.size(); q++) {
-
-            subsetConstructionTable[location][0] = nodes.get(q);
-            location++;
+            nodesArray[q] = nodesAL.get(q);
         }
 
+        // create our combinations and adding them to our final table
+        scTable = combinations(nodesArray);
+        
+        // printing our table for debugging purposes
+        print2D(scTable);
+        
+        // parsing every line of the 2D array
+        // this will determine what gets added to the table at each transition
+        // Loop through all rows 
+        for (int row = 0; row < scTable.length; row++){
+            
+            int aStates = -1;
+            int bStates = -1;
+
+            // Loop through all elements of current row 
+            for (int node = 0; node < scTable[node].length; node++) {
+
+                // checking each nfa transition
+                for (int transition = 0; transition < myNFA.transitions.size(); transition++) {
+
+                    // if the current transition matches our current node
+                    if (scTable[row][node] == myNFA.transitions.get(transition).state_from) {
+                        
+                        // if this node has a transition using 'a'
+                        if (myNFA.transitions.get(transition).transition_symbol == 'a') {
+
+                            // if its still unset
+                            if (aStates == -1) {
+                                
+                                aStates = scTable[row][node];
+
+                            }else { // if its already set then add to it
+
+                                String one = Integer.toString(aStates);
+                                String two = Integer.toString(scTable[row][node]);
+                                String s = one + two;
+                                aStates = Integer.parseInt(s);
+                            }
+                        }
+
+                        // if this node has a transition using 'b'
+                        if (myNFA.transitions.get(transition).transition_symbol == 'b') {
+
+                            // if its still unset
+                            if (bStates == -1) {
+                                
+                                bStates = scTable[row][node];
+
+                            }else { // if its already set then add to it
+
+                                String one = Integer.toString(bStates);
+                                String two = Integer.toString(scTable[row][node]);
+                                String s = one + two;
+                                bStates = Integer.parseInt(s);
+                            }
+                        }
+
+                        //add aStates and bStates to our row in that order
+                        // this is what we will use to build our DFA
+                        scTable[row][scTable[row].length] = aStates;
+                        scTable[row][scTable[row].length+1] = bStates;
+                    }
+                }
+            }
+        }
+
+        // create DFA based on the table
+        for (int row = 0; row < scTable[row].length; row++) {
+
+            int aStates = scTable[row].length-2;
+            int bStates = scTable[row].length-1;
+
+            
+        }
 
         return myDFA;
     }
@@ -211,15 +286,15 @@ public class CreateDFA {
         return combinations;
     }
 
-    public static void print2D(int mat[][]) 
+    public static void print2D(int matrix[][]) 
     { 
         // Loop through all rows 
-        for (int i = 0; i < mat.length; i++){
+        for (int i = 0; i < matrix.length; i++){
   
             System.out.println("\n");
             // Loop through all elements of current row 
-            for (int j = 0; j < mat[i].length; j++) {
-                System.out.print(mat[i][j] + " ");
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
             }
         }
     } 

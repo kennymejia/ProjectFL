@@ -40,6 +40,12 @@ public class grepy {
             nfa_of_input = CreateNFA.generate(s);
             System.out.println("\nNFA:");
             nfa_of_input.build();
+
+            for (int x = 0; x < nfa_of_input.states.size(); x++){
+
+                System.out.println(nfa_of_input.states.get(x));
+            }
+
         } while(input.hasNextLine());
         input.close();
 
