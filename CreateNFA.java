@@ -201,11 +201,7 @@ public class CreateNFA {
         // Before Anything Check To See If Valid ReGex
         if (!validRegularExpression(regex)) {
 
-            System.out.println("Invalid Regular Expression\n" +
-                                "A Valid Reguar Expression Includes\n" +
-                                "Alphabet = {a, b}\n" +
-                                "Operators = {(, ), |, *}\n"
-            );
+            System.out.println("Invalid Regular Expression\n");
             return new NFA();
         }
         

@@ -1,39 +1,54 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class grepy {
 
     public static void main (String [] args) throws IOException {
 
-        String alphabet = "";
+        ArrayList<Character> alphabetArray = new ArrayList<Character>();
         CreateNFA.NFA myNFA = new CreateNFA.NFA();
         CreateDFA.DFA myDFA = new CreateDFA.DFA();
-        Scanner input = new Scanner(System.in);
-
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        File fileToRead = new File("");
+        
         try {
-            File alphabetFile = new File ("alphabet.txt");
-            Scanner reader = new Scanner (alphabetFile);
-            alphabet = reader.nextLine();
-            System.out.println("The Alphabet: " + alphabet.toString());
+            System.out.print("Enter The Name Of A File: ");
+            File check = new File (in.readLine());
+            Scanner reader = new Scanner (check);
             reader.close();
-
+            fileToRead = check;
         } catch (FileNotFoundException e) {
 
-            System.out.println("No File Found");
+            System.out.println("No Such File Found\n" +
+                                "File May Have Been Moved Or Deleted\n" +
+                                "Terminating Program NOW");
         }
 
-        // while our input from the keyboard is not empty we continue to loop
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        Scanner reader = new Scanner (fileToRead);
+        while(reader.hasNextLine()) {
+
+            char line[]= reader.nextLine().toCharArray();
+            
+            for(int x = 0; x < line.length; x++) {
+
+                if(!alphabetArray.contains(line[x])) {
+                    
+                    alphabetArray.add(line[x]);
+                }
+            }
+        }
+        reader.close();
+
+        System.out.println("The Alphabet " + alphabetArray.toString());
+
+        Scanner input = new Scanner(fileToRead);
 
         do {
-            System.out.println("Enter A Regular Expression\n" +
-                                "Alphabet = {a, b}\n" +  
-                                "E = Epsilon Or Empty\n" +
-                                "* = Kleene Star\n" +
-                                "| = Union\n" +
-                                "q = quit\n" +
-                                "Note: Elements With Nothing Between Them Creates Automatic Concatenation\n");
-            String s = in.readLine();
+            
+            String s = input.nextLine();
+            System.out.println("\nThe Current REGEX: " + s);
+
             if (s.equals("q")) 
                 break;
             myNFA = CreateNFA.generate(s);
@@ -45,6 +60,7 @@ public class grepy {
             myDFA.build();
 
         } while(input.hasNextLine());
+
         input.close();
     } 
 }

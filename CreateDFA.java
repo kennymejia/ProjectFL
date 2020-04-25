@@ -62,7 +62,7 @@ public class CreateDFA {
         CreateDFA.DFA myDFA = new CreateDFA.DFA();
         
         // have to make it big enough for all possible combinations
-        int [][] scTable = new int [1000][1000];
+        int [][] scTable = new int [10][10];
         
         // holds our nodes from the NFA
         // ArrayList because we dont know how many nodes we will have
@@ -103,97 +103,96 @@ public class CreateDFA {
             }
         }
 
-        // parsing every line of the 2D array
-        // this will determine what gets added to the table at each transition
-        // Loop through all rows 
+        // every row is a combination of states
+        // we check every row to see if it can create a transition
+        // if it create a transition we add it to the table
+        // if no possible transition created we discard it
         for (int row = 0; row < scTable.length; row++){
             
             int aStates = 0;
             int bStates = 0;
-            int column = -1;
-            boolean wasSet = false;
+            int column = 0;
+            boolean wasSetA = false;
+            boolean wasSetB = false;
 
             do{
-                column++;
 
                 // checking each nfa transition
                 for (int transition = 0; transition < myNFA.transitions.size(); transition++) {
 
-                    // if the current transition matches our current node in our table
-                    if (scTable[row][column] == myNFA.transitions.get(transition).state_from) {
-                        
-                        // if this node has a transition using 'a'
-                        if (myNFA.transitions.get(transition).transition_symbol == 'a') {
 
-                            // if its still unset
-                            // if else is for creating the unique name for each node
-                            if (aStates == 0) {
-                                
-                                aStates = myNFA.transitions.get(transition).state_to;
-                                wasSet = true;
+                    if (wasSetA == false && myNFA.transitions.size() >= scTable[row][column]) {
 
-                            }else { // if its already set then add to it
+                        // if the current transition matches our current node in our table
+                        if (scTable[row][column] == myNFA.transitions.get(transition).state_from) {
+
+                            // if this node has a transition using 'a'
+                            // if we dont have an 'a' transition then the row is not needed 
+                            if (myNFA.transitions.get(transition).transition_symbol == 'a') {
 
                                 String one = Integer.toString(aStates);
                                 String two = Integer.toString(myNFA.transitions.get(transition).state_to);
                                 String s = one + two;
                                 aStates = Integer.parseInt(s);
+
+                            } else { // aStates was set but not a valid transition
+
+                                wasSetA = true;
                             }
-                        } else if (wasSet == true) { // aStates was set but not a valid transition
-
-                            aStates = 0;
                         }
+                    } else {
 
-                    } else if (wasSet == true) {
-
-                        aStates = 0;
+                        wasSetA = true;
                     }
 
-                    // if the current transition matches our current node in our table
-                    if (scTable[row][column] == myNFA.transitions.get(transition).state_from) {
-                        
-                        // if this node has a transition using 'b'
-                        if (myNFA.transitions.get(transition).transition_symbol == 'b') {
+                    if (wasSetB == false && myNFA.transitions.size() >= scTable[row][column]) {
 
-                            // if its still unset
-                            // if else is for creating the unique name for each node
-                            if (bStates == 0) {
-                                
-                                bStates = myNFA.transitions.get(transition).state_to;
-                                wasSet = true;
+                        // if the current transition matches our current node in our table
+                        if (scTable[row][column] == myNFA.transitions.get(transition).state_from) {
 
-                            }else { // if its already set then add to it
+                            // if this node has a transition using 'b'
+                            // if we dont have an 'a' transition then the row is not needed 
+                            if (myNFA.transitions.get(transition).transition_symbol == 'b') {
 
                                 String one = Integer.toString(bStates);
                                 String two = Integer.toString(myNFA.transitions.get(transition).state_to);
                                 String s = one + two;
                                 bStates = Integer.parseInt(s);
+
+                            } else { // bStates was set but not a valid transition
+
+                                wasSetB= true;
                             }
-                        } else if (wasSet == true) { // aStates was set but not a valid transition
-
-                            bStates = 0;
                         }
+                    } else {
 
-                    } else if (wasSet == true) {
-
-                        bStates = 0;
+                        wasSetB = true;
                     }
+                }
 
-                    // add aStates and bStates to our row in that order
-                    // this is what we will use to build our DFA
+                if (wasSetA == true) {
+                    scTable[row][scTable[row].length-2] = 0;
+                } else {
                     scTable[row][scTable[row].length-2] = aStates;
+                }
+
+                if (wasSetB == true) {
+                    scTable[row][scTable[row].length-1] = 0;
+                } else {
                     scTable[row][scTable[row].length-1] = bStates;
                 }
 
+                column++;
+
             // as long as the next index exists and the next number is not 0
-            }while(column < scTable[row].length-1 && scTable[row][column+1] != 0);
+            }while(column < scTable[row].length && scTable[row][column] != 0);
 
         }
 
-        // DEBUGGING
-        print2D(scTable);
-
         // create DFA based on the table
+        // first numbers in scTable are our from states
+        // last two numbers in each row are our to states
+        // if their is a 0 in that location then we do not have a valid transition
         for (int row = 0; row <= scTable.length-2; row++) {
 
             int aTo = scTable[row][scTable[row].length-2];
