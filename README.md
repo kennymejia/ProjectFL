@@ -77,3 +77,5 @@ Resources
 https://en.wikipedia.org/wiki/Thompson%27s_construction
 http://www.cs.may.ie/staff/jpower/Courses/Previous/parsing/node5.html
 https://www.youtube.com/watch?v=RYNN-tb9WxI
+
+DFA Creation Based On Matrix Manipulation

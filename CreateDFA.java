@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CreateDFA {
 
@@ -53,7 +52,6 @@ public class CreateDFA {
                 System.out.println("("+ trans.state_from +" --- "+ trans.transition_symbol +
                     " ---> "+ trans.state_to +")");
             }
-            //(a|b(ab*a)*b)*
         }
     }
 
@@ -63,8 +61,8 @@ public class CreateDFA {
         CreateNFA.NFA myNFA = n;
         CreateDFA.DFA myDFA = new CreateDFA.DFA();
         
-        // holds 400 elements should be enough
-        int [][] scTable = new int [3][5];
+        // have to make it big enough for all possible combinations
+        int [][] scTable = new int [1000][1000];
         
         // holds our nodes from the NFA
         // ArrayList because we dont know how many nodes we will have
@@ -192,23 +190,47 @@ public class CreateDFA {
 
         }
 
-
-
-
-        //TODO: CREATE DFA BASED ON SC TABLE
-
-
-
         // DEBUGGING
         print2D(scTable);
 
         // create DFA based on the table
         for (int row = 0; row <= scTable.length-2; row++) {
 
-            int aStateLocation = scTable[row].length-2;
-            int bStateLocation = scTable[row].length-1;
+            int aTo = scTable[row][scTable[row].length-2];
+            int bTo = scTable[row][scTable[row].length-1];
+            int column = 0;
+            int aFrom = 0;
+            int bFrom = 0;
 
-            if ()
+            // if we have a valid transition
+            if (aTo != 0) {
+
+                do {
+                    String one = Integer.toString(aFrom);
+                    String two = Integer.toString(scTable[row][column]);
+                    String s = one + two;
+                    aFrom = Integer.parseInt(s);
+                    column++;
+                }while(scTable[row][column] != 0);
+
+                myDFA.transitions.add(new Transition(aFrom, aTo, 'a'));
+            }
+
+            // if we have a valid transition
+            if (bTo!= 0) {
+                
+                column = 0;
+
+                do {
+                    String one = Integer.toString(bFrom);
+                    String two = Integer.toString(scTable[row][column]);
+                    String s = one + two;
+                    bFrom = Integer.parseInt(s);
+                    column++;
+                }while(scTable[row][column] != 0);
+
+                myDFA.transitions.add(new Transition(bFrom, bTo, 'b'));
+            }
         }
 
         return myDFA;

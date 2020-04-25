@@ -6,7 +6,8 @@ public class grepy {
     public static void main (String [] args) throws IOException {
 
         String alphabet = "";
-        CreateNFA.NFA nfa_of_input = new CreateNFA.NFA();
+        CreateNFA.NFA myNFA = new CreateNFA.NFA();
+        CreateDFA.DFA myDFA = new CreateDFA.DFA();
         Scanner input = new Scanner(System.in);
 
         try {
@@ -21,9 +22,7 @@ public class grepy {
             System.out.println("No File Found");
         }
 
-        // has to be deckared when compiling
         // while our input from the keyboard is not empty we continue to loop
-        // javac grepy.java && java grepy '^(a|b)*$'
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
         do {
@@ -37,27 +36,15 @@ public class grepy {
             String s = in.readLine();
             if (s.equals("q")) 
                 break;
-            nfa_of_input = CreateNFA.generate(s);
+            myNFA = CreateNFA.generate(s);
             System.out.println("\nNFA:");
-            nfa_of_input.build();
-            
-            CreateDFA.subsetConstruction(nfa_of_input);
+            myNFA.build();
 
-            for (int x = 0; x < nfa_of_input.states.size(); x++){
-
-                System.out.println(nfa_of_input.states.get(x));
-            }
+            myDFA = CreateDFA.subsetConstruction(myNFA);
+            System.out.println("\nDFA:");
+            myDFA.build();
 
         } while(input.hasNextLine());
         input.close();
-
-
-
-
-        // testing combinations and print
-        int [] test = {1,2,3};
-        int [][] print = CreateDFA.combinations(test);
-
-        CreateDFA.print2D(print);
     } 
 }
