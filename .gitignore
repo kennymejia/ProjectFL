@@ -5,3 +5,9 @@ CreateNFA.class
 CreateDFA$Transition.class
 CreateDFA$DFA.class
 CreateDFA.class
+
+# Ignore files with extension `.class`
+*.class
+
+#Ignore files with '.txt'
+*.txt
