@@ -40,6 +40,8 @@ public class grepy {
             nfa_of_input = CreateNFA.generate(s);
             System.out.println("\nNFA:");
             nfa_of_input.build();
+            
+            CreateDFA.subsetConstruction(nfa_of_input);
 
             for (int x = 0; x < nfa_of_input.states.size(); x++){
 
