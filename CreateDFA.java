@@ -53,6 +53,14 @@ public class CreateDFA {
                     " ---> "+ trans.state_to +")");
             }
         }
+
+        public void writeToFile(String fileName) {
+            for (Transition trans: transitions) {
+                String data = ("("+ trans.state_from +" --- "+ trans.transition_symbol +
+                                " ---> "+ trans.state_to +")");
+                FileManip.Write(fileName, data);
+            }
+        }
     }
 
     // subsetConstruction using a matrix

@@ -57,7 +57,14 @@ public class CreateNFA {
                 System.out.println("("+ trans.state_from +" --- "+ trans.transition_symbol +
                     " ---> "+ trans.state_to +")");
             }
-            //(a|b(ab*a)*b)*
+        }
+
+        public void writeToFile(String fileName) {
+            for (Transition trans: transitions) {
+                String data = ("("+ trans.state_from +" --- "+ trans.transition_symbol +
+                                " ---> "+ trans.state_to +")");
+                FileManip.Write(fileName, data);
+            }
         }
     }
 

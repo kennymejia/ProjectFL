@@ -8,7 +8,7 @@ public class FileManip {
 
         try {
 
-            File newFile = new File("../" + fileName);
+            File newFile = new File(fileName);
 
             if (newFile.createNewFile()) {
 
@@ -29,7 +29,7 @@ public class FileManip {
     public static void Write(String fileName, String data) {
         try {
       
-            FileWriter myWriter = new FileWriter("../" + fileName);
+            FileWriter myWriter = new FileWriter(fileName);
             myWriter.write(data);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
