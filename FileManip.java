@@ -29,10 +29,10 @@ public class FileManip {
     public static void Write(String fileName, String data) {
         try {
       
-            FileWriter myWriter = new FileWriter(fileName);
+            FileWriter myWriter = new FileWriter(fileName,true);
             myWriter.write(data);
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            //System.out.println("Successfully wrote to the file.");
 
         } catch (IOException e) {
       

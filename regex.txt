@@ -1,4 +1,6 @@
+abab
 ab
 ba
-aa
 bb
+ba 
+01

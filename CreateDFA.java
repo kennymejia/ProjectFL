@@ -70,7 +70,7 @@ public class CreateDFA {
         CreateDFA.DFA myDFA = new CreateDFA.DFA();
         
         // have to make it big enough for all possible combinations
-        int [][] scTable = new int [10][10];
+        int [][] scTable = new int [1000][1000];
         
         // holds our nodes from the NFA
         // ArrayList because we dont know how many nodes we will have
