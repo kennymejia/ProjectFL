@@ -2,5 +2,5 @@ abab
 ab
 ba
 bb
-ba 
+ba
 01

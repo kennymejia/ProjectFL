@@ -1,3 +1,11 @@
+/*
+ * Notes:
+ * naming scheme is awkward when trying to create nodes from NFA to DFA
+ * best solution i came up with was to use the numbers from the NFA
+ * and add them together in a string format ie. "1" + "2" + "3" = "123"
+ * the output can be messy but was the fastest implementation
+ */ 
+
 import java.util.ArrayList;
 
 public class CreateDFA {
